@@ -1,0 +1,29 @@
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.title {
+  text-align: center;
+}
+
+.button {
+  color: white;
+  background-color: black;
+  border: none;
+  padding: 5px 10px;
+  transition: background-color 100ms ease-in;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: darkgray;
+  transition: background-color 100ms ease-in;
+}
+
+.button-group {
+  width: 75%;
+  display: flex;
+  margin: auto;
+}
