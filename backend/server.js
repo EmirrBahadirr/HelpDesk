@@ -1,11 +1,15 @@
 const express = require("express");// express kütüphanesi
 require("dotenv").config(); // bu bazı değişkenleri dışarıdan almamızı sağlıyor ve o değişken sayfası .env 
                             // bu şekilde değişkenleri dışarıda tanımlamış oluyoruz.
+const cors = require('cors');
+
+                                              
 const mysql = require("mysql2");// mysql kullanmak için kütüphane
 
 const app = express(); // app değişkeni bir web servis oldu
 
 app.use(express.json()); // json dosyası ile işem yapmak için gerekli
+app.use(cors());
 
 const PORT = process.env.PORT; // port belirlendi
 
@@ -29,7 +33,7 @@ app.get("/ticket/:id", (req, res) => {   // get kullanarak bir istek attık
             return;
         }
 
-        res.send(result); // değeri aldık
+        res.send(result); // sonuç printi
     });
 });
 
@@ -55,7 +59,10 @@ app.post('/ticket', (req, res) => { // postu datayı update etmek için kullanı
                 res.send(error);
                 return
             }
-            res.send({id : result.insertId, ...ticket}); // { } öğesi 
+            console.log("Database e veri girildi");
+            res.send({...ticket, id : result.insertId}); // { } öğesi bize print etmke için fayda sağlayan bir yapı id kısmını biz belirledik
+                                        // : result.insertId ise resultu yanlız print ettiğimizde mysql bize soktuğumuz datanın insert edilir
+                                        // ken verdiği ıdyi döndürüyor, ...ticket yapısı da bize ticket objesinin tüm değerlerini döndür demek.
         }
         
     );
@@ -70,7 +77,8 @@ app.put('/ticket/:id', (req ,res) => {
             res.send(error);
             return;
         }
-        res.send(ticket);
+        res.send({ ...ticket, id });
+        console.log("database güncellendi");
     })
 })
 
@@ -84,7 +92,7 @@ app.delete("/ticket/:id", (req, res) => {   // silme işlemi için
             return;
         }
 
-        res.send("Success"); 
+        res.send({message : "Success"}); 
     });
 });
 
