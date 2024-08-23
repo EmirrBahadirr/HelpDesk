@@ -4,6 +4,7 @@ import TicketForm from './components/ticketForm/TicketForm.js';
 import { useEffect, useState} from "react";
 import { formatDate } from './util/dateUtil.js';
 import Table from './components/Table/Table.js';
+const araba = "araba";
 
 const COLS = [
   "ID",
