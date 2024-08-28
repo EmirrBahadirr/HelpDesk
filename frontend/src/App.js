@@ -4,6 +4,7 @@ import TicketForm from './components/ticketForm/TicketForm.js';
 import { useEffect, useState} from "react";
 import { formatDate } from './util/dateUtil.js';
 import Table from './components/Table/Table.js';
+import MUITable from './components/Table/MUITable.js';
 
 const COLS = [
   "ID",
@@ -63,7 +64,7 @@ function App() {
     <div className="App">
       <div className='main-table'>
         <h2 className='title'>Tickets</h2>
-        <Table
+        <MUITable
           list={tickets}
           colNames={COLS}
           onSelect={loadTicket}
