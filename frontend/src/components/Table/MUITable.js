@@ -53,8 +53,8 @@ function MUITable({
                   {onDelete && (
                     <TableCell>
                       <Button
-                        variant="contained"
-                        color="warning"
+                        variant="outlined"
+                        color="error"
                         onClick={(e) => {
                           e.stopPropagation();
                           onDelete(row);

@@ -5,6 +5,7 @@ import { useEffect, useState} from "react";
 import { formatDate } from './util/dateUtil.js';
 import Table from './components/Table/Table.js';
 import MUITable from './components/Table/MUITable.js';
+import MuiForm from './components/ticketForm/MuiForm.js';
 
 const COLS = [
   "ID",
@@ -24,7 +25,14 @@ function App() {
   }
 
   const unloadTicket = () => {
-    setCurrentTicket({});
+    setCurrentTicket({
+      id: "", 
+      summary: "", 
+      priority: "", 
+      status: "", 
+      createDate: new Date(), 
+      updateDate: new Date()
+    });
   }
 
   const getAllTickets = async () => {
@@ -40,7 +48,7 @@ function App() {
     }
 
     getAllTickets();// ticketlarımız her iki durumda da güncellenecek ve ticketların güncellenmesi için hook ile beraber tüm verileri çekip tekrar renderlamış oluyoruz
-    setCurrentTicket(savedTicket);
+    setCurrentTicket({});
   };
 
   const sendDeleteRequest = async (ticket) => {
@@ -73,7 +81,7 @@ function App() {
       </div>
       <div className='main-form'>
         <h2 className='title'>Modify Ticket</h2>
-        <TicketForm
+        <MuiForm
           id={currentTicket.id}
           summary={currentTicket.summary}
           priority={currentTicket.priority}
