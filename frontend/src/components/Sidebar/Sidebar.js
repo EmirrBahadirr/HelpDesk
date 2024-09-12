@@ -2,6 +2,7 @@ import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar } from '@mu
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import TableChartIcon from '@mui/icons-material/TableChart';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import React from 'react'
 
 const drawerWidth = 240;
@@ -25,6 +26,10 @@ function Sidebar() {
                     <ListItem button component={Link} to = "/tickets">
                         <ListItemIcon> <TableChartIcon /></ListItemIcon>
                         <ListItemText primary="Tickets" />
+                    </ListItem>
+                    <ListItem button component={Link} to = "/create">
+                        <ListItemIcon> <AddBoxIcon /></ListItemIcon>
+                        <ListItemText primary="Create Ticket" />  
                     </ListItem>
                 </List>
             </Toolbar>

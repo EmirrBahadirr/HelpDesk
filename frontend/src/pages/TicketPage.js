@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
-import { fetchAllTickets, deleteTicket } from '../service/ticketService';
+import { fetchAllTickets, deleteTicket, updateTicket, createTicket } from '../service/ticketService';
 import MUITable from '../components/Table/MUITable';
 import { formatDate } from '../util/dateUtil';
 
@@ -14,25 +14,20 @@ const COLS = [
 ];
 function TicketsPage() {
     const [tickets, setTickets] = useState([]);
-    const [currentTicket, setCurrentTicket] = useState({});
-  
-    const loadTicket = (ticket) => {
-      setCurrentTicket(ticket);
-    };
-  
-    const unloadTicket = () => {
-      setCurrentTicket({
-        id: "", 
-        summary: "", 
-        priority: "LOW", // Varsayılan değer
-        status: "CREATED", // Varsayılan değer
-        createDate: new Date(), 
-        updateDate: new Date()
-      });
-    };
   
     const getAllTickets = async () => {
       setTickets(await fetchAllTickets());
+    };
+
+    const sendSaveRequest = async (id, summary ,priority, status ,create_date, update_date) => {
+      const newTicket = {id, summary ,priority, status ,create_date : formatDate(new Date(create_date)), update_date : formatDate(new Date(update_date))};// format datesiz çalışıyor mu kontrol et
+      
+      const savedTicket = await updateTicket(newTicket, id);
+      if(!savedTicket){
+        return;
+      }
+  
+      getAllTickets();// ticketlarımız her iki durumda da güncellenecek ve ticketların güncellenmesi için hook ile beraber tüm verileri çekip tekrar renderlamış oluyoruz
     };
   
     const sendDeleteRequest = async (ticket) => {
@@ -45,7 +40,6 @@ function TicketsPage() {
         return;
       }
       getAllTickets();
-      setCurrentTicket({});
     };
   
     useEffect(() => {
@@ -54,14 +48,14 @@ function TicketsPage() {
   
     return (
       <div>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom align='center'>
           Tickets
         </Typography>
         <MUITable 
           list={tickets}
           colNames={COLS}
-          onSelect={loadTicket}
           onDelete={sendDeleteRequest}
+          onSubmitFromPage={sendSaveRequest}
         />
       </div>
     );

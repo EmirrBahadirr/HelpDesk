@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Grid, Card, CardContent } from '@mui/material';
+import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Grid, Card, CardContent, Typography } from '@mui/material';
 import { formatDate } from '../../util/dateUtil';
 
 function MuiForm({
@@ -10,6 +10,7 @@ function MuiForm({
     createDate = new Date(),
     updateDate = new Date(),
     readonly = false,
+    isCreateMode,
     onSubmit = () => {},
     onClear = () => {}
 }) {
@@ -26,6 +27,7 @@ function MuiForm({
   return ( // key id ile tüm formu id değiştiğinde renderlamaya zorladık.
     <Card key={id} sx={{ maxWidth: 600, margin: 'auto', boxShadow: 3 }}>    
       <CardContent>
+        <Typography variant="h4" gutterBottom align='center'>Ticket</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -71,7 +73,7 @@ function MuiForm({
                 value={tStatus}
                 onChange={(e) => settStatus(e.target.value)}
                 label="Status"
-                disabled={readonly}
+                disabled={isCreateMode}
               >
                 <MenuItem value="CREATED">CREATED</MenuItem>
                 <MenuItem value="REJECTED">REJECTED</MenuItem>
@@ -116,7 +118,7 @@ function MuiForm({
               fullWidth
               sx={{ m: 1 }}
             >
-              Clear
+              Cancel
             </Button>
           </Grid>
         </Grid>
