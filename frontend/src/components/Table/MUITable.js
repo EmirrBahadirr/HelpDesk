@@ -13,6 +13,13 @@ import ClearIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
 import MuiForm from "../ticketForm/MuiForm";  // Ticket formu
 
+const priorityStyles = {
+  LOW: { color: 'green', fontWeight: 'medium' },
+  MID: { color: 'blue', fontWeight: 'medium' },
+  HIGH: { color: 'orange', fontWeight: 'medium' },
+  EXTREME: { color: 'red', fontWeight: 'medium' }
+};
+
 function MUITable({
   list,
   colNames,
@@ -87,7 +94,8 @@ function MUITable({
               .map((row, index) => (
                 <TableRow key={index}>
                   {Object.values(row).map((value, index2) => (
-                    <TableCell key={index2}> {typeof value === 'string' && Date.parse(value) ? formatDate(new Date(value)) : value}</TableCell>
+                    index2 === colNames.indexOf("Priority") ? (<TableCell key={index2} sx={priorityStyles[value]}> {value}</TableCell>) :
+                    (<TableCell key={index2}> {typeof value === 'string' && Date.parse(value) ? formatDate(new Date(value)) : value}</TableCell>)
                   ))}
                   {onDelete && (
                     <TableCell>

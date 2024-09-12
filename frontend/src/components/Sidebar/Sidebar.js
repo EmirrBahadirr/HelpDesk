@@ -1,41 +1,53 @@
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import React from 'react'
+import React, { useState } from 'react';
 
 const drawerWidth = 240;
 
-function Sidebar() {
-    return (
-        <Drawer
-            variant='permanent'
-            sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-                [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' }, // bu propları araştır
-            }}>
-            
-            <Toolbar sx={{ minHeight: 64 }}> 
-                <List>
-                    <ListItem button component={Link} to = "/">
-                        <ListItemIcon> <DashboardIcon /> </ListItemIcon>
-                        <ListItemText primary="Home" />
-                    </ListItem>
-                    <ListItem button component={Link} to = "/tickets">
-                        <ListItemIcon> <TableChartIcon /></ListItemIcon>
-                        <ListItemText primary="Tickets" />
-                    </ListItem>
-                    <ListItem button component={Link} to = "/create">
-                        <ListItemIcon> <AddBoxIcon /></ListItemIcon>
-                        <ListItemText primary="Create Ticket" />  
-                    </ListItem>
-                </List>
-            </Toolbar>
+const links = [
+  { text: 'Home', icon: <DashboardIcon />, to: '/' },
+  { text: 'Tickets', icon: <TableChartIcon />, to: '/tickets' },
+  { text: 'Create Ticket', icon: <AddBoxIcon />, to: '/create' },
+];
 
-        </Drawer>
-    )
+function Sidebar() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredLinks = links.filter(link =>
+    link.text.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <Drawer
+      variant='permanent'
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+      }}>
+      <Toolbar sx={{ minHeight: 64 }}>
+        <TextField
+          fullWidth
+          placeholder="Search"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Toolbar>
+      <List>
+        {filteredLinks.map((link, index) => (
+          <ListItem button component={Link} to={link.to} key={index}>
+            <ListItemIcon>{link.icon}</ListItemIcon>
+            <ListItemText primary={link.text} />
+          </ListItem>
+        ))}
+      </List>
+    </Drawer>
+  );
 }
 
-export default Sidebar
+export default Sidebar;
