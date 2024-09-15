@@ -28,7 +28,7 @@ function Sidebar() {
         flexShrink: 0,
         [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
       }}>
-      <Toolbar sx={{ minHeight: 64 }}>
+      <Toolbar sx={{ minHeight: 64, marginTop: '80px' }}>
         <TextField
           fullWidth
           placeholder="Search"

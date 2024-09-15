@@ -5,25 +5,28 @@ import Home from './pages/Home';
 import TicketsPage from './pages/TicketPage';
 import { CssBaseline, Toolbar } from '@mui/material';
 import CreateTicketPage from './pages/CreateTicketPage';
+import Topbar from './components/Topbar/Topbar';
 
 const drawerWidth = 240;
 
 function App() {
   return (
     <Router>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <CssBaseline />
         <Sidebar />
+        <Topbar />
+
         <main style={{
+          marginRight: '120px',
           padding: '16px',
-          marginLeft: drawerWidth/2,
           display: 'flex',
-          justifyContent: 'center',  // Yatayda ortalama
-          alignItems: 'center',      // Dikeyde ortalama
+          justifyContent: 'center',
+          alignItems: 'center',
           minHeight: '100vh',
-          
+          width: '100%',
         }}>
-          < Toolbar />
+
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/tickets" element={<TicketsPage />} />
