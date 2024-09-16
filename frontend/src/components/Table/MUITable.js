@@ -11,6 +11,9 @@ import { formatDate } from "../../util/dateUtil";
 import { IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import MuiForm from "../ticketForm/MuiForm";  // Ticket formu
 
 const priorityStyles = {
@@ -18,6 +21,13 @@ const priorityStyles = {
   MID: { color: 'blue', fontWeight: 'medium' },
   HIGH: { color: 'orange', fontWeight: 'medium' },
   EXTREME: { color: 'red', fontWeight: 'medium' }
+};
+
+const priorityOrder = {
+  LOW: 1,
+  MID: 2,
+  HIGH: 3,
+  EXTREME: 4
 };
 
 function MUITable({
@@ -76,6 +86,43 @@ function MUITable({
     setOpenEditDialog(false);
   }
 
+  //sort başlangıç
+
+  const [sortDirection, setSortDirection] = useState(null); // null (varsayılan), 'asc' (artan), 'desc' (azalan)
+
+  const sortList = () => {
+    if (sortDirection === 'asc') {
+      return [...list].sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);  // Artan sıralama
+    }
+    if (sortDirection === 'desc') {
+      return [...list].sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);  // Azalan sıralama
+    }
+    return list; // Varsayılan: sıralama yok
+  };
+
+  const handlePriorityHeaderClick = () => {
+    if (sortDirection === null) {
+      setSortDirection('asc');  // İlk tıklama: artan
+    } else if (sortDirection === 'asc') {
+      setSortDirection('desc');  // İkinci tıklama: azalan
+    } else {
+      setSortDirection(null);  // Üçüncü tıklama: varsayılan
+    }
+  };
+
+  const renderSortIcon = () => {
+    if (sortDirection === 'asc') {
+      return <ArrowUpwardIcon />;
+    }
+    if (sortDirection === 'desc') {
+      return <ArrowDownwardIcon />;
+    }
+    return <UnfoldMoreIcon />;
+  };
+
+
+  //sort bitiş
+
   return (
     <Paper>
       <TableContainer>
@@ -83,13 +130,20 @@ function MUITable({
           <TableHead>
             <TableRow>
               {colNames.map((headerItem, index) => (
-                <TableCell key={index}>{headerItem.toUpperCase()}</TableCell>
+                <TableCell key={index}>
+                {headerItem.toUpperCase()}
+                {headerItem === "Priority" && (
+                    <IconButton  onClick={headerItem === "Priority" ? handlePriorityHeaderClick : undefined}>
+                      {renderSortIcon()}
+                    </IconButton>
+                  )}
+              </TableCell>
               ))}
               {onDelete && <TableCell>Actions</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
-            {list
+            {sortList()
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => (
                 <TableRow key={index}>
