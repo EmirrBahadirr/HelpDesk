@@ -1,91 +1,41 @@
 import './App.css';
-import { createTicket, deleteTicket, fetchAllTickets, updateTicket } from './service/ticketService';
-import TicketForm from './components/ticketForm/TicketForm.js';
-import { useEffect, useState} from "react";
-import { formatDate } from './util/dateUtil.js';
-import Table from './components/Table/Table.js';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Sidebar from './components/Sidebar/Sidebar';
+import Home from './pages/Home';
+import TicketsPage from './pages/TicketPage';
+import { CssBaseline, Toolbar } from '@mui/material';
+import CreateTicketPage from './pages/CreateTicketPage';
+import Topbar from './components/Topbar/Topbar';
 
-const COLS = [
-  "ID",
-  "Summary",
-  "Priority",
-  "Status",
-  "Create Date",
-  "Update Date"
-]
+const drawerWidth = 240;
 
 function App() {
-  const [tickets, setTickets] = useState([]);// tüm ticketleri koymak için bir arrayımız var en başta boş
-  const [currentTicket, setCurrentTicket] = useState({});// tek bir bilet koymak için bir obje en başta boş
-
-  const loadTicket = (ticket) => {
-    setCurrentTicket(ticket);
-  }
-
-  const unloadTicket = () => {
-    setCurrentTicket({});
-  }
-
-  const getAllTickets = async () => {
-    setTickets(await fetchAllTickets());
-  };
-
-  const sendSaveRequest = async (id, summary ,priority, status ,create_date, update_date) => {
-    const newTicket = {id, summary ,priority, status ,create_date : formatDate(new Date(create_date)), update_date : formatDate(new Date(update_date))};// format datesiz çalışıyor mu kontrol et
-    
-    const savedTicket = id ? await updateTicket(newTicket, id) : await createTicket(newTicket);
-    if(!savedTicket){
-      return;
-    }
-
-    getAllTickets();// ticketlarımız her iki durumda da güncellenecek ve ticketların güncellenmesi için hook ile beraber tüm verileri çekip tekrar renderlamış oluyoruz
-    setCurrentTicket(savedTicket);
-  };
-
-  const sendDeleteRequest = async (ticket) => {
-    if(!ticket?.id){
-      return;
-    }
-
-    const result = await deleteTicket(ticket.id);
-    if(!result){
-      return;
-    }
-    getAllTickets();
-    setCurrentTicket({});
-  };
-
-  useEffect(() => { // bu kısmı sor !!
-    getAllTickets();
-  },[])
-
   return (
-    <div className="App">
-      <div className='main-table'>
-        <h2 className='title'>Tickets</h2>
-        <Table
-          list={tickets}
-          colNames={COLS}
-          onSelect={loadTicket}
-          onDelete={sendDeleteRequest}
-         />
+    <Router>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <CssBaseline />
+        <Sidebar />
+        <Topbar />
+
+        <main style={{
+          marginRight: '120px',
+          padding: '16px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          width: '100%',
+        }}>
+
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/tickets" element={<TicketsPage />} />
+            <Route path="/create" element={<CreateTicketPage />} />
+            {/* Yeni sayfalar ekledikçe buraya Route ekleyebilirsiniz */}
+          </Routes>
+        </main>
       </div>
-      <div className='main-form'>
-        <h2 className='title'>Modify Ticket</h2>
-        <TicketForm
-          id={currentTicket.id}
-          summary={currentTicket.summary}
-          priority={currentTicket.priority}
-          status={currentTicket.status}
-          createDate={currentTicket.create_date ? new Date(currentTicket.create_date) : new Date()}
-          updateDate={currentTicket.update_date ? new Date(currentTicket.update_date) : new Date()}
-          readonly = {false}
-          onSubmit={sendSaveRequest}
-          onClear={unloadTicket}
-        />
-      </div>
-      
-    </div>
+    </Router >
   );
 }
 
